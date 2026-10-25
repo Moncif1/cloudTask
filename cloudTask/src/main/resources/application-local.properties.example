@@ -1,0 +1,6 @@
+spring.datasource.url=jdbc:mysql://localhost:3306/cloudtask_db
+spring.datasource.username=
+spring.datasource.password=
+
+# Local development only: create/update tables from the Java entities
+spring.jpa.hibernate.ddl-auto=update

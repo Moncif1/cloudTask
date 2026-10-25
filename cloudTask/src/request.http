@@ -1,0 +1,14 @@
+### Récupérer toutes les tâches (GET)
+GET http://localhost:8080/api/tasks
+
+### Ajouter une nouvelle tâche (POST)
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Ma première tâche",
+  "completed": false,
+  "priority": 1,
+  "dueDate": null,
+  "assignedUser": null
+}

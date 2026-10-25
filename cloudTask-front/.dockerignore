@@ -1,0 +1,11 @@
+*
+!package.json
+!package-lock.json
+!index.html
+!.oxlintrc.json
+!vite.config.js
+!src/
+!src/**
+!public/
+!public/**
+!nginx.conf

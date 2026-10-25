@@ -1,0 +1,44 @@
+name: cloudtask
+
+services:
+  db:
+    image: mysql:8.4
+    # Ces variables initialisent la base uniquement au premier demarrage.
+    # Les mots de passe viennent du fichier .env, non versionne.
+    environment:
+      MYSQL_DATABASE: cloudtask_db
+      MYSQL_USER: cloudtask
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      # Conserve les donnees MySQL meme si le conteneur est supprime.
+      - mysql-data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./cloudTask
+    environment:
+      # "db" est le nom reseau du service MySQL, pas localhost.
+      DB_URL: jdbc:mysql://db:3306/cloudtask_db
+      DB_USERNAME: cloudtask
+      DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      # Cree/met a jour les tables pour ce projet de demonstration.
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      PORT: 8080
+    depends_on:
+      - db
+    # depends_on n'attend pas que MySQL soit pret : relancer en cas d'echec.
+    restart: on-failure
+
+  frontend:
+    build:
+      context: ./cloudTask-front
+    ports:
+      # Port de la machine : port du conteneur. Acces local uniquement.
+      - "127.0.0.1:${APP_PORT:-8088}:8080"
+    depends_on:
+      - backend
+
+volumes:
+  # Volume gere par Docker avec les options par defaut : aucun dossier a creer.
+  mysql-data:
